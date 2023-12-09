@@ -6,6 +6,16 @@ from flask_login import LoginManager
 db = SQLAlchemy()
 DB_NAME = 'database.db'
 
+action = {
+    0: 'Successful login',
+    1: 'Unsuccessful login',
+    2: 'Successful register',
+    3: 'Unsuccessful register',
+    4: 'User logout',
+    5: 'Note added',
+    6: 'Note deleted'
+}
+
 def create_app():
 
     app = Flask(__name__)

@@ -1,11 +1,15 @@
 from flask import Blueprint, render_template, request, flash, jsonify
 from flask_login import login_required, current_user
-from .models import Note
-from . import db
+from .models import Note, AuditLog
+from . import db, action
 import json
 
 views = Blueprint('views', __name__)
 
+def log_event(user_id, action):
+    entry = AuditLog(user_id=user_id, action=action)
+    db.session.add(entry)
+    db.session.commit()
 
 @views.route('/', methods=['GET', 'POST'])
 @login_required
@@ -19,6 +23,7 @@ def home():
             new_note = Note(data=note, user_id=current_user.id)
             db.session.add(new_note)
             db.session.commit()
+            log_event(current_user.id, action[5])
             flash('Note added!', category='success')
 
     return render_template("home.html", user=current_user)
@@ -32,5 +37,6 @@ def delete_note():
         if note.user_id == current_user.id:
             db.session.delete(note)
             db.session.commit()
+            log_event(current_user.id, action[6])
 
     return jsonify({})
