@@ -16,5 +16,5 @@ limiter = Limiter(
 #    app.run(host='0.0.0.0', port=5000, debug=True, ssl_context='adhoc')
     
 if __name__ == '__main__':
-    context = ('C:\\SS_Final\\mycert.crt', 'C:\\SS_Final\\mykey.key')  # Ruta a tu certificado y clave
+    context = ('mycert.crt', 'mykey.key')  # Ruta a tu certificado y clave
     app.run(host='0.0.0.0', port=5000, debug=True, ssl_context=context)
