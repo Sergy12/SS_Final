@@ -1,5 +1,4 @@
 from website import create_app
-from flask import Flask, jsonify
 from flask_limiter import Limiter
 from flask_limiter.util import get_remote_address
 
