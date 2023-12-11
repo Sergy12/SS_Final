@@ -21,3 +21,9 @@ class AuditLog(db.Model):
     timestamp = db.Column(db.DateTime(timezone=True), default=func.now())
     user_id = db.Column(db.Integer, nullable=True)
     action = db.Column(db.String(255))
+
+# Add this function to create a user with the is_admin field
+def create_admin(email, password, first_name):
+    admin = User(email=email, password=password, first_name=first_name, is_admin=True)
+    db.session.add(admin)
+    db.session.commit()

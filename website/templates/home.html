@@ -1,21 +1,86 @@
 {% extends "base.html" %} {% block title %}Home{% endblock %} {% block content
 %}
-<h1 align="center">Notes</h1>
-<ul class="list-group list-group-flush" id="notes">
-    {% for note in user.notes %}
-    <li class="list-group-item">
-    {{ note.data }}
-    <button type="button" class="close" onClick="deleteNote('{{ note.id }}')">
-        <span aria-hidden="true">&times;</span>
-    </button>
+<div class="container">
+  <h1 class="text-center">Notes</h1>
+  <ul class="list-group">
+    {% for note in user_notes %}
+    <li
+      class="list-group-item d-flex justify-content-between align-items-center"
+    >
+      <div>
+        {% if note.written_by_admin %}
+        <span style="font-weight: bold; color: red"
+          >Admin Note - Written by {{ note.admin_name }}</span
+        ><br />
+        {% endif %}
+        <div>{{ note.data }}</div>
+      </div>
+      <div class="button-group">
+        <button
+          type="button"
+          class="btn btn-danger mr-2"
+          onClick="confirmDelete('{{ note.id }}')"
+        >
+          Delete
+        </button>
+        <a
+          href="{{ url_for('views.edit_note', note_id=note.id) }}"
+          class="btn btn-primary"
+          >Edit</a
+        >
+      </div>
     </li>
     {% endfor %}
-</ul>
-<form method="POST">
-    <textarea name="note" id="note" class="form-control"></textarea>
-    <br />
-    <div align="center">
-    <button type="submit" class="btn btn-primary">Add Note</button>
+  </ul>
+</div>
+
+<div class="container mt-4">
+  <form method="POST">
+    <textarea name="note" id="note" class="form-control mb-3"></textarea>
+    <div class="text-center">
+      <button type="submit" class="btn btn-primary">Add Note</button>
     </div>
-</form>
-{% endblock %}
+  </form>
+</div>
+
+<script>
+  function confirmDelete(noteId) {
+    if (confirm("Are you sure you want to delete this note?")) {
+      window.location.href = "/delete-note/" + noteId;
+    }
+  }
+</script>
+
+{% if user_notes.has_prev or user_notes.has_next %}
+<div class="d-flex justify-content-center mt-4">
+  <nav aria-label="User pagination">
+    <ul class="pagination">
+      {% if user_notes.has_prev %}
+      <li class="page-item">
+        <a
+          class="page-link"
+          href="{{ url_for('views.home', page=user_notes.prev_num) }}"
+          >Previous</a
+        >
+      </li>
+      {% endif %} {% for page_num in user_notes.iter_pages() %}
+      <li
+        class="page-item {% if user_notes.page == page_num %}active{% endif %}"
+      >
+        <a class="page-link" href="{{ url_for('views.home', page=page_num) }}"
+          >{{ page_num }}</a
+        >
+      </li>
+      {% endfor %} {% if user_notes.has_next %}
+      <li class="page-item">
+        <a
+          class="page-link"
+          href="{{ url_for('views.home', page=user_notes.next_num) }}"
+          >Next</a
+        >
+      </li>
+      {% endif %}
+    </ul>
+  </nav>
+</div>
+{% endif %} {% endblock %}

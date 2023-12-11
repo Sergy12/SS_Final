@@ -35,6 +35,10 @@
           {% else %}
           <a class="nav-item nav-link" id="login" href="/login">Login</a>
           <a class="nav-item nav-link" id="signUp" href="/sign-up">Sign Up</a>
+          {% endif %} {% if user.is_authenticated and user.is_admin %}
+          <a class="nav-item nav-link" id="adminUsers" href="/admin/users"
+            >Admin Users</a
+          >
           {% endif %}
         </div>
       </div>
@@ -75,13 +79,9 @@
       crossorigin="anonymous"
     ></script>
 
-
-    <script 
-    type="text/javascript"
-    src="{{url_for('static', filename='index.js')}}"
-    >
-      
-    </script>
-
+    <script
+      type="text/javascript"
+      src="{{url_for('static', filename='index.js')}}"
+    ></script>
   </body>
 </html>

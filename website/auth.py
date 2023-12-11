@@ -51,6 +51,7 @@ def sign_up():
         first_name = request.form.get('firstName')
         password1 = request.form.get('password1')
         password2 = request.form.get('password2')
+        is_admin = request.form.get('isAdmin')
 
         user = User.query.filter_by(email=email).first()
         if user:
@@ -70,7 +71,7 @@ def sign_up():
             log_event(None, action[3])
         else:
             new_user = User(email=email, first_name=first_name, password=generate_password_hash(
-                password1, method='pbkdf2', salt_length=16))
+                password1, method='pbkdf2', salt_length=16), is_admin=False)
             db.session.add(new_user)
             db.session.commit()
             login_user(new_user, remember=True)

@@ -1,0 +1,96 @@
+{% extends "base.html" %} {% block content %}
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>User Profile</title>
+    <link
+      rel="stylesheet"
+      href="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/css/bootstrap.min.css"
+      integrity="sha384-Vkoo8x4CGsO3+Hhxv8T/Q5PaXtkKtu6ug5TOeNV6gBiFeWPGFN9MuhOf23Q9Ifjh"
+      crossorigin="anonymous"
+    />
+    <style>
+      .card-body {
+        display: flex;
+        justify-content: space-between;
+      }
+
+      .user-info {
+        flex: 0 0 70%;
+      }
+
+      .profile-btn {
+        flex: 0 0 20%;
+        display: flex;
+        align-items: center;
+        justify-content: flex-end;
+      }
+
+      .notes-container {
+        margin-top: 20px;
+      }
+
+      .notes-container .list-group-item {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+      }
+
+      .notes-container .list-group-item .delete-note {
+        display: none;
+      }
+    </style>
+  </head>
+
+  <body>
+    <div class="container mt-4">
+      <h1>User Profile</h1>
+      <div class="card">
+        <div class="card-header">User Information</div>
+        <div class="card-body">
+          <h5 class="card-title">Email: {{ profile_user.email }}</h5>
+          <p class="card-text">First Name: {{ profile_user.first_name }}</p>
+          <p class="card-text">
+            Admin Status: {% if profile_user.is_admin %} Yes {% else %} No {%
+            endif %}
+          </p>
+        </div>
+      </div>
+
+      {% if current_user.is_admin or current_user.id == profile_user.id %}
+      <!-- Sección para admin o el propio usuario -->
+      <h3 class="mt-4">Actions for Admin</h3>
+      <!-- Agrega aquí cualquier contenido específico para admin o el propio usuario -->
+      <div class="profile-btn">
+        <form
+          action="{{ url_for('views.add_note', user_id=profile_user.id) }}"
+          method="post"
+        >
+          <textarea
+            name="note"
+            id="note"
+            class="form-control mb-3"
+            placeholder="Write a note"
+          ></textarea>
+          <button type="submit" class="btn btn-primary">Add Note</button>
+        </form>
+      </div>
+      {% endif %}
+
+      <div class="notes-container">
+        <h3 class="mt-4">User's Notes</h3>
+        <ul class="list-group list-group-flush" id="notes">
+          {% for note in profile_user.notes %}
+          <li class="list-group-item">
+            <span>{{ note.data }}</span>
+            {% if current_user.is_admin %}
+            <button class="btn btn-danger delete-note">Delete</button>
+            {% endif %}
+          </li>
+          {% endfor %}
+        </ul>
+      </div>
+    </div>
+  </body>
+</html>
+{% endblock %}
