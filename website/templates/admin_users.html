@@ -1,0 +1,25 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>User Management</title>
+  </head>
+  <body>
+    <h1>User Management</h1>
+
+    {% for user in users %}
+    <div>
+      <p>{{ user.email }}</p>
+      {% if current_user.is_admin and current_user.id != user.id %}
+      <form
+        action="{{ url_for('views.admin_delete_user', user_id=user.id) }}"
+        method="post"
+      >
+        <input type="submit" value="Delete" />
+      </form>
+      {% endif %}
+    </div>
+    {% endfor %}
+
+    <a href="{{ url_for('views.home') }}">Back to Home</a>
+  </body>
+</html>
